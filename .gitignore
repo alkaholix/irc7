@@ -33,3 +33,6 @@ msbuild.wrn
 
 #irc7d specific files
 states/
+
+# Rust
+target/
