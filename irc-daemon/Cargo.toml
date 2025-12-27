@@ -1,0 +1,27 @@
+[package]
+name = "irc-daemon"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "IRC7 Server Daemon"
+
+[[bin]]
+name = "irc7d"
+path = "src/main.rs"
+
+[dependencies]
+irc = { path = "../irc" }
+irc-logging = { path = "../irc-logging" }
+sspi-ntlm = { path = "../sspi-ntlm" }
+sspi-gatekeeper = { path = "../sspi-gatekeeper" }
+tokio.workspace = true
+async-trait.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+clap.workspace = true
+parking_lot.workspace = true

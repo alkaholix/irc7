@@ -1,0 +1,17 @@
+[package]
+name = "irc-directory"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "IRC7 Directory Server"
+
+[dependencies]
+irc = { path = "../irc" }
+tokio.workspace = true
+async-trait.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+tracing.workspace = true
+serde.workspace = true
+serde_json.workspace = true

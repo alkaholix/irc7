@@ -1,0 +1,11 @@
+[package]
+name = "irc-logging"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+description = "IRC7 Logging infrastructure"
+
+[dependencies]
+tracing.workspace = true
+tracing-subscriber.workspace = true
