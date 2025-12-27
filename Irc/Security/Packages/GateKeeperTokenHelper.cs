@@ -1,7 +1,10 @@
 ﻿using System.Runtime.InteropServices;
+using NLog;
 
 public class GateKeeperTokenHelper
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+
     public static GateKeeperToken InitializeFromBytes(byte[] Data)
     {
         var AuthToken = new GateKeeperToken();
@@ -11,8 +14,10 @@ public class GateKeeperTokenHelper
             Marshal.Copy(Data, 0, pBuf, Marshal.SizeOf(AuthToken));
             AuthToken = Marshal.PtrToStructure<GateKeeperToken>(pBuf);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Log.Error(ex, "GateKeeperTokenHelper: Failed to deserialize GateKeeperToken from bytes. Data length: {0}", Data?.Length ?? 0);
+            throw;
         }
         finally
         {
