@@ -1,10 +1,12 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 using Irc.Helpers;
+using NLog;
 using SSPI.NTLM;
 
 public class NtlmType3Message
 {
+    private static readonly Logger Log = LogManager.GetCurrentClassLogger();
     private readonly byte[] _byteData;
 
     private readonly string _data;
@@ -103,8 +105,9 @@ public class NtlmType3Message
 
                 return authenticated;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Debug(ex, "NTLM: NTLMv2/NTLM2 session authentication attempt failed");
             }
         else if (_flags[NtlmFlag.NTLMSSP_NEGOTIATE_NTLM])
             try
@@ -114,15 +117,16 @@ public class NtlmType3Message
                 if (!authenticated) return _lmResponseData == response.LmResponse(password, challenge);
                 //if (_flags[NtlmFlag.NTLMSSP_NEGOTIATE_NTLM])
                 //{
-                //return 
+                //return
                 //}
                 //else // (_flags[NtlmFlag.NTLMSSP_NEGOTIATE_LM_KEY])
                 //{
 
                 //}
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Log.Debug(ex, "NTLM: NTLM authentication attempt failed");
             }
 
         return false;
