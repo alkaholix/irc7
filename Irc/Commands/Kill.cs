@@ -28,31 +28,29 @@ internal class Kill : Command, ICommand
             return;
         }
 
-        var channels = user.GetChannels();
-        if (channels.Count > 0)
+        var targetUser = server.GetUserByNickname(target);
+
+        if (targetUser == null)
         {
-            var channel = channels.First().Key;
-            var member = channel.GetMemberByNickname(target);
-
-            if (member == null)
-            {
-                chatFrame.User.Send(Raws.IRCX_ERR_NOSUCHNICK_401(server, user, target));
-                return;
-            }
-
-            var targetUser = member.GetUser();
-
-            if (targetUser.GetLevel() > user.GetLevel())
-            {
-                chatFrame.User.Send(Raws.IRCX_ERR_SECURITY_908(server, user));
-                return;
-            }
-
-            targetUser.RemoveChannel(channel);
-            channel.GetMembers().Remove(member);
-            channel.Send(Raws.RPL_KILL_IRC(user, targetUser, reason));
-            targetUser.Disconnect(
-                Raws.IRCX_CLOSINGLINK_007_SYSTEMKILL(server, targetUser, targetUser.GetAddress().RemoteIp));
+            chatFrame.User.Send(Raws.IRCX_ERR_NOSUCHNICK_401(server, user, target));
+            return;
         }
+
+        if (targetUser.GetLevel() > user.GetLevel())
+        {
+            chatFrame.User.Send(Raws.IRCX_ERR_SECURITY_908(server, user));
+            return;
+        }
+
+        // Notify all channels the target user is in about the kill
+        var targetChannels = targetUser.GetChannels();
+        foreach (var channelKvp in targetChannels)
+        {
+            var channel = channelKvp.Key;
+            channel.Send(Raws.RPL_KILL_IRC(user, targetUser, reason));
+        }
+
+        targetUser.Disconnect(
+            Raws.IRCX_CLOSINGLINK_007_SYSTEMKILL(server, targetUser, targetUser.GetAddress().RemoteIp));
     }
 }
