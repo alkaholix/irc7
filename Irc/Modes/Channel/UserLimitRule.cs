@@ -23,24 +23,22 @@ public class UserLimitRule : ModeRuleChannel, IModeRule
 
         if (flag == false)
         {
-            if (isAdministrator)
-            {
-                // TODO: Currently does not support unsetting limit without extra parameter
-                channelModes.UserLimit.Value = 0;
-                DispatchModeChange(source, target, false, string.Empty);
-            }
-
+            // Allow any user with proper channel permissions to unset the limit
+            channelModes.UserLimit.Value = 0;
+            DispatchModeChange(source, target, false, string.Empty);
             return EnumIrcError.OK;
         }
 
-
         if (!int.TryParse(parameter, out var limit)) return EnumIrcError.ERR_NEEDMOREPARAMS;
 
-        if (limit > 0 && (limit <= 100 || isAdministrator))
-        {
-            channelModes.UserLimit.Value = limit;
-            DispatchModeChange(source, target, true, limit.ToString());
-        }
+        // Limit must be positive
+        if (limit <= 0) return EnumIrcError.ERR_BADVALUE;
+
+        // Non-administrators can only set limits up to 100
+        if (limit > 100 && !isAdministrator) return EnumIrcError.ERR_BADVALUE;
+
+        channelModes.UserLimit.Value = limit;
+        DispatchModeChange(source, target, true, limit.ToString());
 
         return EnumIrcError.OK;
     }
