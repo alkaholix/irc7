@@ -13,6 +13,9 @@ pub trait DataRegulator: Send + Sync {
     /// Pop an incoming message
     fn pop_incoming(&self) -> Option<Box<dyn ChatMessage>>;
 
+    /// Peek at the next incoming message without removing it
+    fn peek_incoming(&self) -> Option<Box<dyn ChatMessage>>;
+
     /// Push an outgoing message
     fn push_outgoing(&self, message: String);
 
@@ -24,6 +27,9 @@ pub trait DataRegulator: Send + Sync {
 
     /// Get outgoing queue length
     fn outgoing_queue_length(&self) -> usize;
+
+    /// Get incoming bytes count
+    fn incoming_bytes(&self) -> usize;
 
     /// Get outgoing bytes count
     fn outgoing_bytes(&self) -> usize;

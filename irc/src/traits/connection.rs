@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use std::net::SocketAddr;
 
 /// Callback type for receiving data
-pub type OnReceiveCallback = Box<dyn Fn(&[u8]) + Send + Sync>;
+pub type OnReceiveCallback = Box<dyn Fn(&str) + Send + Sync>;
 
 /// A network connection
 #[async_trait]
