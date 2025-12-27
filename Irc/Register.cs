@@ -130,6 +130,6 @@ public static class Register
 
         var hasUserAddress = server.DisableUserRegistration || chatFrame.User.GetAddress().IsAddressPopulated();
 
-        return !authenticating && !registered & hasNickname & hasUserAddress;
+        return !authenticating && !registered && hasNickname && hasUserAddress;
     }
 }
